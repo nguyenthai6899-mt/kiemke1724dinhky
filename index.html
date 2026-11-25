@@ -42,11 +42,13 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
 .tabs{display:flex;gap:8px;margin-bottom:14px}
 button.tab{background:var(--card);color:var(--tx);border:1px solid var(--bd)}
 button.tab.on{background:var(--ac);color:var(--act);border-color:var(--ac)}
-#qrtab{display:none}
+#qrtab,#mtab{display:none}
 body.tq #qrtab{display:block}
+body.tm #mtab{display:block}
+body.tm #setup,body.tm #result,body.tm main>.card:not(#setup):not(#result){display:none!important}
 body.tq #result{display:none!important}
 .qbox{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:14px}
-#qrpages{overflow:auto;max-height:75vh;background:var(--bg);border-radius:10px}
+#qrpages,#mpages{overflow:auto;max-height:75vh;background:var(--bg);border-radius:10px}
 .qpage{page:qr;width:210mm;height:297mm;box-sizing:border-box;padding:8mm;display:grid;grid-template-columns:repeat(7,1fr);grid-template-rows:repeat(10,1fr);background:#fff;color:#000;margin:0 auto 12px;box-shadow:0 1px 6px rgba(0,0,0,.25);break-after:page;page-break-after:always}
 .ql{border:.2mm solid #bbb;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;overflow:hidden;padding:.6mm .5mm;text-align:center;line-height:1.05;font-family:Arial,sans-serif}
 .ql svg{width:15.5mm;height:15.5mm;display:block;flex-shrink:0;margin-bottom:.3mm}
@@ -55,7 +57,7 @@ body.tq #result{display:none!important}
 @page qr{size:A4 portrait;margin:0}
 .fl input[list]::-webkit-calendar-picker-indicator{opacity:1;display:block;cursor:pointer}
 .fl select,.fl input{width:100%;min-width:100px;padding:4px 6px;font-size:13px;margin-top:4px;font-weight:400}
-@media print{@page{size:A4 portrait;margin:12mm}.fl{display:none!important}.ec,.sb{display:none!important}.tabs,#qrtab{display:none!important}body.pq main>*:not(#qrtab){display:none!important}body.pq #qrtab{display:block!important}body.pq main{max-width:none;padding:0}body.pq .qctl{display:none!important}body.pq #qrpages{max-height:none;overflow:visible;background:#fff}body.pq .qpage{box-shadow:none;margin:0}html,body{background:#fff!important;color:#000!important;padding:0!important}main{max-width:none;padding:0}.sub,.stats,.card:not(#result),.bar,#q,#cmsg{display:none!important}#result{border:0;padding:0;background:#fff!important}.stat{background:#fff!important;border:1px solid #999}.stat span{color:#333}.tw{max-height:none!important;overflow:visible!important;margin-top:8px}table{min-width:0!important;font-size:11px;color:#000}thead{display:table-header-group}tr{page-break-inside:avoid;break-inside:avoid}th{position:static!important;background:#eee!important;color:#000!important}table{border-collapse:collapse!important}th,td{border:1px solid #555!important;padding:4px 5px}}
+@media print{@page{size:A4 portrait;margin:12mm}.fl{display:none!important}.ec,.sb{display:none!important}.tabs,#qrtab,#mtab{display:none!important}body.pq main>*:not(#qrtab):not(#mtab){display:none!important}body.pq.tq #qrtab,body.pq.tm #mtab{display:block!important}body.pq main{max-width:none;padding:0}body.pq .qctl,body.pq .mctl{display:none!important}body.pq #qrpages,body.pq #mpages{max-height:none;overflow:visible;background:#fff}body.pq .qpage{box-shadow:none;margin:0}html,body{background:#fff!important;color:#000!important;padding:0!important}main{max-width:none;padding:0}.sub,.stats,.card:not(#result),.bar,#q,#cmsg{display:none!important}#result{border:0;padding:0;background:#fff!important}.stat{background:#fff!important;border:1px solid #999}.stat span{color:#333}.tw{max-height:none!important;overflow:visible!important;margin-top:8px}table{min-width:0!important;font-size:11px;color:#000}thead{display:table-header-group}tr{page-break-inside:avoid;break-inside:avoid}th{position:static!important;background:#eee!important;color:#000!important}table{border-collapse:collapse!important}th,td{border:1px solid #555!important;padding:4px 5px}}
 .stats{flex-wrap:wrap}
 .stat{min-width:140px}
 .stat.wide{flex:2 1 260px}
@@ -63,6 +65,17 @@ body.tq #result{display:none!important}
 .sst div{white-space:nowrap}
 .sst span{font-size:14px;color:var(--tx)}
 .sst b{display:inline;font-size:15px}
+.mt{width:100%;border-collapse:collapse;font-size:15px;min-width:420px}
+.mt th,.mt td{border:1px solid #b8bec6;padding:0;color:#000;background:#fff;text-align:center}
+.mt th{padding:8px 6px;font-weight:700;position:sticky;top:0;z-index:1;white-space:nowrap}
+.mt th.h1{background:#ffff00;color:#1a3fd6;width:64px}
+.mt th.h2{background:#b7e1cd}
+.mt th.h4{background:#ffff00;width:110px}
+.mt td.c1{background:#ffff00;font-weight:700;color:#1a3fd6}
+.mt td.c2{background:#b7e1cd}
+.mt input{width:100%;min-width:0;border:0;background:transparent;color:#000;padding:7px 8px;font-size:15px;text-align:left;border-radius:0}
+.mt input[data-c="2"]{text-align:right}
+.mt input:focus{outline:2px solid var(--ac);outline-offset:-2px}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -119,6 +132,15 @@ body.tq #result{display:none!important}
     <div class="msg" id="qmsg">Tải file Excel/CSV ở phía trên, chọn bộ lọc rồi bấm Tạo bản in. Mỗi trang A4 có 70 mã QR (7 cột x 10 hàng).</div>
   </div>
   <div id="qrpages"></div>
+</div>
+<div id="mtab">
+  <div class="qbox mctl">
+    <div class="msg" style="margin:0 0 10px">Dán dữ liệu (copy từ Excel/Google Sheets) vào bảng bên dưới. Nhấp vào ô <b>Mã sản phẩm / IMEI</b> đầu tiên rồi bấm Ctrl+V: dữ liệu 3 cột liền nhau (Mã / IMEI, Trạng thái, Số lượng) sẽ tự điền đúng cột. Ký tự ẩn tự động bị xóa. Số lượng để trống được tính là 1. Mỗi dòng ra một tem QR.</div>
+    <div class="bar" style="margin:0 0 10px"><button id="mprint">IN</button><button id="madd" class="ghost">Thêm 20 dòng</button><button id="mclr" class="ghost">Xóa hết</button></div>
+    <div class="msg" id="mmsg"></div>
+    <div class="tw"><table class="mt"><thead><tr><th class="h1">STT</th><th class="h2">MÃ SẢN PHẨM / IMEI</th><th>TRẠNG THÁI</th><th class="h4">SỐ LƯỢNG</th></tr></thead><tbody id="mtb"></tbody></table></div>
+  </div>
+  <div id="mpages"></div>
 </div>
 </main>
 
@@ -263,11 +285,11 @@ document.querySelectorAll('.sb').forEach(function(b){b.addEventListener('click',
 var CS={k:null,d:1};
 try{if(window.qrcode){qrcode.stringToBytes=function(s){var u=unescape(encodeURIComponent(s)),a=[];for(var i=0;i<u.length;i++)a.push(u.charCodeAt(i));return a}}}catch(e){}
 var tabsEl=document.createElement('div');tabsEl.className='tabs';
-tabsEl.innerHTML='<button type="button" class="tab on" data-t="stat">Thống kê</button><button type="button" class="tab" data-t="qr">In mã QR</button>';
+tabsEl.innerHTML='<button type="button" class="tab on" data-t="stat">Thống kê</button><button type="button" class="tab" data-t="qr">In mã QR</button><button type="button" class="tab" data-t="man">Nhập tay in QR</button>';
 var mainEl=document.querySelector('main');mainEl.insertBefore(tabsEl,mainEl.querySelector('.card'));
 tabsEl.addEventListener('click',function(e){
   var b=e.target.closest('button');if(!b)return;
-  document.body.classList.toggle('tq',b.getAttribute('data-t')==='qr');
+  document.body.classList.toggle('tq',b.getAttribute('data-t')==='qr');document.body.classList.toggle('tm',b.getAttribute('data-t')==='man');
   [].forEach.call(tabsEl.children,function(x){x.classList.toggle('on',x===b)});
   if(b.getAttribute('data-t')==='qr'&&qrDirty&&agg.length)qrGen();
 });
@@ -343,12 +365,12 @@ function qrGen(){
     }catch(e){m.textContent='Có lỗi khi tạo mã QR.'}
   },30);
 }
-function qrPdf(){
-  var m=$('qmsg');
+function qrPdf(getItems,msgId){
+  var m=$(msgId||'qmsg');
   if(!DL){m.textContent='Chế độ xem này chưa hỗ trợ tải file. Hãy mở đường link bằng trình duyệt trên máy tính.';return}
   if(!(window.jspdf&&window.jspdf.jsPDF)||!window.qrcode){m.textContent='Thư viện chưa tải xong, hãy thử lại sau vài giây (cần có internet).';return}
-  if(!agg.length){m.textContent='Hãy tải file Excel/CSV lên ở phía trên trước.';return}
-  var items=qrItems();
+  if(!getItems&&!agg.length){m.textContent='Hãy tải file Excel/CSV lên ở phía trên trước.';return}
+  var items=(getItems||qrItems)();
   if(!items.length){m.textContent='Không có sản phẩm nào khớp bộ lọc.';return}
   var W=794,H=1123,S=3,per=70,np=Math.ceil(items.length/per),PX=96/25.4;
   var mg=8*PX,cw=(W-2*mg)/7,ch=(H-2*mg)/10,qs=15.5*PX,LH=7.2;
@@ -414,10 +436,110 @@ function qrPdf(){
   };
   step();
 }
+var INV=/[\p{Cf}\p{Cc}\u00AD\u034F\u115F\u1160\u17B4\u17B5\u180E\u2028\u2029\u3164\uFFA0]/gu;
+function cleanTxt(v){
+  return String(v==null?'':v).replace(/[\t\r\n]+/g,' ').replace(/\u00A0|[\u2000-\u200A\u202F\u205F\u3000]/g,' ').replace(INV,'').replace(/\s+/g,' ').trim();
+}
+function qrHtml(items){
+  var per=70,np=Math.ceil(items.length/per),h='';
+  for(var p=0;p<np;p++){
+    h+='<div class="qpage">';
+    items.slice(p*per,(p+1)*per).forEach(function(it){
+      h+='<div class="ql">'+qrSvg(it.text)+'<b>'+esc(it.text)+'</b><span>SL: '+fmt(it.qty)+'</span><span>'+esc(it.st)+'</span></div>';
+    });
+    h+='</div>';
+  }
+  return{html:h,np:np};
+}
+function mAddRow(){
+  var tb=$('mtb'),tr=document.createElement('tr');
+  tr.innerHTML='<td class="c1">'+(tb.children.length+1)+'</td><td class="c2"><input type="text" data-c="0" autocomplete="off" spellcheck="false"></td><td><input type="text" data-c="1" autocomplete="off"></td><td><input type="text" data-c="2" inputmode="decimal" autocomplete="off"></td>';
+  tb.appendChild(tr);
+}
+function mEnsure(n){while($('mtb').children.length<n)mAddRow()}
+function mItems(){
+  var out=[];
+  [].forEach.call($('mtb').children,function(tr){
+    var inp=tr.querySelectorAll('input');
+    var code=cleanTxt(inp[0].value);if(!code)return;
+    var q=toNum(cleanTxt(inp[2].value));if(isNaN(q))q=1;
+    out.push({text:code,st:qrSt(cleanTxt(inp[1].value)),qty:q});
+  });
+  return out;
+}
+function mUpd(){
+  var n=mItems().length;
+  $('mmsg').textContent=n?('Đã có '+n+' dòng dữ liệu hợp lệ.'):'';
+}
+for(var mi=0;mi<50;mi++)mAddRow();
+$('mtb').addEventListener('paste',function(e){
+  var t=e.target;if(!t||t.tagName!=='INPUT')return;
+  var cd=e.clipboardData||window.clipboardData,txt=cd?cd.getData('text'):'';
+  if(!txt)return;
+  e.preventDefault();
+  var ri=[].indexOf.call($('mtb').children,t.closest('tr')),ci=+t.getAttribute('data-c');
+  var lines=txt.replace(/\r/g,'').split('\n');
+  while(lines.length>1&&lines[lines.length-1]==='')lines.pop();
+  var rows=lines.map(function(l){return l.split('\t')});
+  var skipFirst=ci===0&&rows.length>0&&rows.every(function(r){return r.length===4});
+  mEnsure(ri+rows.length);
+  rows.forEach(function(cells,li){
+    if(skipFirst)cells=cells.slice(1);
+    var ins=$('mtb').children[ri+li].querySelectorAll('input');
+    cells.forEach(function(c,k){
+      var col=ci+k;if(col>2)return;
+      ins[col].value=cleanTxt(c);
+    });
+  });
+  mUpd();
+});
+$('mtb').addEventListener('change',function(e){
+  if(e.target.tagName==='INPUT')e.target.value=cleanTxt(e.target.value);
+  mUpd();
+});
+$('mtb').addEventListener('keydown',function(e){
+  var t=e.target;if(t.tagName!=='INPUT')return;
+  var k=e.key;if(k!=='Enter'&&k!=='ArrowDown'&&k!=='ArrowUp')return;
+  e.preventDefault();
+  t.value=cleanTxt(t.value);
+  var tr=t.closest('tr'),i=[].indexOf.call($('mtb').children,tr)+(k==='ArrowUp'?-1:1);
+  if(i<0)return;
+  mEnsure(i+1);
+  $('mtb').children[i].querySelectorAll('input')[+t.getAttribute('data-c')].focus();
+  mUpd();
+});
+$('madd').addEventListener('click',function(){for(var i=0;i<20;i++)mAddRow()});
+var mClrT=null;
+$('mclr').addEventListener('click',function(){
+  var b=$('mclr');
+  if(mClrT===null){b.textContent='Bấm lần nữa để xóa hết';mClrT=setTimeout(function(){b.textContent='Xóa hết';mClrT=null},3000);return}
+  clearTimeout(mClrT);mClrT=null;b.textContent='Xóa hết';
+  $('mtb').innerHTML='';for(var i=0;i<50;i++)mAddRow();
+  $('mpages').innerHTML='';mUpd();
+});
+$('mprint').addEventListener('click',function(){
+  var m=$('mmsg');
+  if(!window.qrcode){m.textContent='Thư viện tạo mã QR chưa tải xong, hãy thử lại sau vài giây (cần có internet).';return}
+  var items=mItems();
+  if(!items.length){m.textContent='Chưa có dữ liệu. Hãy nhập hoặc dán dữ liệu vào bảng.';return}
+  m.textContent='Đang tạo bản in '+items.length+' mã QR...';
+  setTimeout(function(){
+    try{
+      var r=qrHtml(items);
+      $('mpages').innerHTML=r.html;
+      m.textContent=items.length+' mã QR / '+r.np+' trang A4. Đang mở hộp thoại in...';
+      document.body.classList.add('pq');
+      setTimeout(function(){
+        try{window.print()}catch(x){m.textContent='Hãy bấm Ctrl+P (máy Mac: Cmd+P) để in.'}
+        document.body.classList.remove('pq');
+      },200);
+    }catch(x){m.textContent='Có lỗi khi tạo mã QR.'}
+  },30);
+});
 $('qgen').addEventListener('click',qrGen);
 ['q_grp','q_st','q_type'].forEach(function(i){$(i).addEventListener('change',function(){if(agg.length)qrGen()})});
 updQInfo();
-$('qpdf').addEventListener('click',qrPdf);
+$('qpdf').addEventListener('click',function(){qrPdf()});
 $('qprt').addEventListener('click',function(){
   if(!document.querySelector('#qrpages .qpage')){$('qmsg').textContent='Hãy bấm Tạo bản in trước, rồi mới in.';return}
   document.body.classList.add('pq');
