@@ -284,6 +284,11 @@ function buildQrOpts(){
   fillSel($('q_grp'),'Tất cả nhóm hàng',Object.keys(g).sort(cmp));
   fillSel($('q_st'),'Tất cả trạng thái',Object.keys(s).sort(cmp));
 }
+function qrSt(st){
+  if(stInfo(st).label!=='TBBM')return st;
+  var m=String(st).match(/^\s*\d+\s*[-–.:]\s*/);
+  return (m?m[0].replace(/\s+$/,' '):'')+'TBBM';
+}
 function qrItems(){
   var g=$('q_grp').value,s=$('q_st').value,t=$('q_type').value;
   return agg.filter(function(r){
@@ -293,7 +298,7 @@ function qrItems(){
     if(t==='code'&&r.imei!=='')return false;
     return (r.imei||r.code)!=='';
   }).sort(function(x,y){return cmp(x.grp,y.grp)||cmp(x.code,y.code)||cmp(x.imei,y.imei)})
-  .map(function(r){return{text:r.imei||r.code,st:r.st,qty:r.qty}});
+  .map(function(r){return{text:r.imei||r.code,st:qrSt(r.st),qty:r.qty}});
 }
 function qrMake(text){var q=qrcode(0,'M');q.addData(text);q.make();return q}
 function qrSvg(text){
